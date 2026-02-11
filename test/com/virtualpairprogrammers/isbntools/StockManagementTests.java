@@ -12,6 +12,9 @@ public class StockManagementTests {
     @Test
     public void testCanGetACorrectLocatorCode() {
 
+        /*
+        STUB IMPL
+
         ExternalISBNDataService testWebService = new ExternalISBNDataService() {
             @Override
             public Book lookUp(String isbn) {
@@ -25,6 +28,17 @@ public class StockManagementTests {
                 return null;
             }
         };
+         */
+
+        // As this point we have actually got a fake or a dummy because there is no implementation here
+        ExternalISBNDataService testWebService = mock(ExternalISBNDataService.class);
+
+        // Now its stub
+        when(testWebService.lookUp(anyString())).thenReturn(new Book("0140177396", "Of Mice and Men", "J. Steinbeck"));
+
+
+        ExternalISBNDataService testDatabaseService = mock(ExternalISBNDataService.class);
+        when(testDatabaseService.lookUp(anyString())).thenReturn(null);
 
 
         StockManager stockManager = new StockManager();
