@@ -1,5 +1,6 @@
 package com.virtualpairprogrammers.isbntools;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -8,6 +9,19 @@ import static org.mockito.Mockito.*;
 
 
 public class StockManagementTests {
+
+    ExternalISBNDataService testWebService;
+    StockManager stockManager;
+    ExternalISBNDataService testDatabaseService;
+
+    @Before
+    public void setUp() {
+        testWebService = mock(ExternalISBNDataService.class);
+        stockManager = new StockManager();
+        stockManager.setwebService(testWebService);
+        stockManager.setDatabaseService(testDatabaseService);
+        testDatabaseService = mock(ExternalISBNDataService.class);
+    }
 
     @Test
     public void testCanGetACorrectLocatorCode() {
@@ -31,19 +45,19 @@ public class StockManagementTests {
          */
 
         // As this point we have actually got a fake or a dummy because there is no implementation here
-        ExternalISBNDataService testWebService = mock(ExternalISBNDataService.class);
+        // ExternalISBNDataService testWebService = mock(ExternalISBNDataService.class);
 
         // Now its stub
         when(testWebService.lookUp(anyString())).thenReturn(new Book("0140177396", "Of Mice and Men", "J. Steinbeck"));
 
-
-        ExternalISBNDataService testDatabaseService = mock(ExternalISBNDataService.class);
+        // Use in global var
+        // ExternalISBNDataService testDatabaseService = mock(ExternalISBNDataService.class);
         when(testDatabaseService.lookUp(anyString())).thenReturn(null);
 
 
-        StockManager stockManager = new StockManager();
-        stockManager.setwebService(testWebService);
-        stockManager.setDatabaseService(testDatabaseService);
+        // StockManager stockManager = new StockManager();
+        // stockManager.setwebService(testWebService);
+        // stockManager.setDatabaseService(testDatabaseService);
 
         String isbn = "0140177396";
         String locatorCode = stockManager.getLocatorCode(isbn);
@@ -53,41 +67,42 @@ public class StockManagementTests {
 
     @Test
     public void databaseIsUsedIfDataIsPresent() {
-        ExternalISBNDataService databaseService = mock(ExternalISBNDataService.class); // This line of code will do is it creates for us a dummy class
-        ExternalISBNDataService webService = mock(ExternalISBNDataService.class); // we don't need to override lookup method
+        // We don't need any of this code at all. We managed to remove some of the code duplication
+        // ExternalISBNDataService databaseService = mock(ExternalISBNDataService.class); // This line of code will do is it creates for us a dummy class
+        // ExternalISBNDataService webService = mock(ExternalISBNDataService.class); // we don't need to override lookup method
 
-        when(databaseService.lookUp("0140177396")).thenReturn(new Book("0140177396", "abc", "abc"));
+        when(testDatabaseService.lookUp("0140177396")).thenReturn(new Book("0140177396", "abc", "abc"));
 
-        StockManager stockManager = new StockManager();
-        stockManager.setwebService(webService);
-        stockManager.setDatabaseService(databaseService);
+        //StockManager stockManager = new StockManager();
+        stockManager.setwebService(testWebService);
+        stockManager.setDatabaseService(testDatabaseService);
 
         String isbn = "0140177396";
         String locatorCode = stockManager.getLocatorCode(isbn);
 
-        verify(databaseService, times(1)).lookUp("0140177396");
+        verify(testDatabaseService, times(1)).lookUp("0140177396");
         // verify(databaseService).lookUp("0140177396");
-        verify(webService, times(0)).lookUp(anyString());
+        verify(testWebService, times(0)).lookUp(anyString());
         // verify(webService, never()).lookUp(anyString());
     }
 
     @Test
     public void webServiceIsUsedIfDataIsNotPresentInDatabase() {
-        ExternalISBNDataService databaseService = mock(ExternalISBNDataService.class); // This line of code will do is it creates for us a dummy class
-        ExternalISBNDataService webService = mock(ExternalISBNDataService.class); // we don't need to override lookup method
+        // ExternalISBNDataService databaseService = mock(ExternalISBNDataService.class); // This line of code will do is it creates for us a dummy class
+        // ExternalISBNDataService webService = mock(ExternalISBNDataService.class); // we don't need to override lookup method
 
-        when(databaseService.lookUp("0140177396")).thenReturn(null);
-        when(webService.lookUp("0140177396")).thenReturn(new Book("0140177396", "abc", "abc"));
+        when(testDatabaseService.lookUp("0140177396")).thenReturn(null);
+        when(testWebService.lookUp("0140177396")).thenReturn(new Book("0140177396", "abc", "abc"));
 
         StockManager stockManager = new StockManager();
-        stockManager.setwebService(webService);
-        stockManager.setDatabaseService(databaseService);
+        stockManager.setwebService(testWebService);
+        stockManager.setDatabaseService(testDatabaseService);
 
         String isbn = "0140177396";
         String locatorCode = stockManager.getLocatorCode(isbn);
 
-        verify(databaseService, times(1)).lookUp("0140177396");
-        verify(webService, times(1)).lookUp("0140177396");
+        verify(testDatabaseService, times(1)).lookUp("0140177396");
+        verify(testWebService, times(1)).lookUp("0140177396");
     }
 
 }
