@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ISBNValidator.iml" filepath="$PROJECT_DIR$/ISBNValidator.iml" />
-      <module fileurl="file://$PROJECT_DIR$/TautologyExample/TautologyExample.iml" filepath="$PROJECT_DIR$/TautologyExample/TautologyExample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../TautologyExample/TautologyExample/TautologyExample.iml" filepath="$PROJECT_DIR$/../TautologyExample/TautologyExample/TautologyExample.iml" />
     </modules>
   </component>
 </project>
